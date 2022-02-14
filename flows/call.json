@@ -1,0 +1,298 @@
+{
+  "description": "承認コール",
+  "states": [
+    {
+      "name": "Trigger",
+      "type": "trigger",
+      "transitions": [
+        {
+          "event": "incomingMessage"
+        },
+        {
+          "event": "incomingCall"
+        },
+        {
+          "next": "OutgoingCall",
+          "event": "incomingRequest"
+        },
+        {
+          "event": "incomingParent"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        }
+      }
+    },
+    {
+      "name": "OutgoingCall",
+      "type": "make-outgoing-call-v2",
+      "transitions": [
+        {
+          "next": "Gather",
+          "event": "answered"
+        },
+        {
+          "event": "busy"
+        },
+        {
+          "next": "OutgoingCall",
+          "event": "noAnswer"
+        },
+        {
+          "event": "failed"
+        }
+      ],
+      "properties": {
+        "machine_detection_speech_threshold": "2400",
+        "detect_answering_machine": false,
+        "send_digits": "",
+        "sip_auth_username": "",
+        "offset": {
+          "x": 290,
+          "y": 320
+        },
+        "recording_status_callback": "",
+        "sip_auth_password": "",
+        "recording_channels": "mono",
+        "timeout": 60,
+        "machine_detection": "Enable",
+        "trim": "do-not-trim",
+        "record": false,
+        "machine_detection_speech_end_threshold": "1200",
+        "machine_detection_timeout": "30",
+        "from": "{{flow.channel.address}}",
+        "to": "{{contact.channel.address}}",
+        "machine_detection_silence_timeout": "5000"
+      }
+    },
+    {
+      "name": "Gather",
+      "type": "gather-input-on-call",
+      "transitions": [
+        {
+          "next": "CheckValue",
+          "event": "keypress"
+        },
+        {
+          "event": "speech"
+        },
+        {
+          "event": "timeout"
+        }
+      ],
+      "properties": {
+        "voice": "Polly.Takumi",
+        "number_of_digits": 1,
+        "speech_timeout": "auto",
+        "offset": {
+          "x": -130,
+          "y": 540
+        },
+        "loop": 3,
+        "finish_on_key": "#",
+        "say": "お疲れ様です。お忙しいところ、大変お手数ですが、ワークフロー承認をお願いします。\n承認していただきたい内容は次のとおりです。\n{{flow.data.detail}}\n。内容は以上です。もし承認して頂く場合は0、否認の場合は1を押してください。",
+        "language": "ja-JP",
+        "stop_gather": true,
+        "gather_language": "en",
+        "profanity_filter": "true",
+        "timeout": 5
+      }
+    },
+    {
+      "name": "CheckValue",
+      "type": "split-based-on",
+      "transitions": [
+        {
+          "next": "OutgoingCall",
+          "event": "noMatch"
+        },
+        {
+          "next": "SetReasonToNull",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "承認",
+              "arguments": [
+                "{{widgets.Gather.Digits}}"
+              ],
+              "type": "equal_to",
+              "value": "0"
+            }
+          ]
+        },
+        {
+          "next": "Reason",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "否認",
+              "arguments": [
+                "{{widgets.Gather.Digits}}"
+              ],
+              "type": "equal_to",
+              "value": "1"
+            }
+          ]
+        }
+      ],
+      "properties": {
+        "input": "{{widgets.Gather.Digits}}",
+        "offset": {
+          "x": 60,
+          "y": 790
+        }
+      }
+    },
+    {
+      "name": "Function",
+      "type": "run-function",
+      "transitions": [
+        {
+          "next": "Thanks",
+          "event": "success"
+        },
+        {
+          "event": "fail"
+        }
+      ],
+      "properties": {
+        "service_sid": "ZS0442755b33645e0f7a52ff4eb302288f",
+        "environment_sid": "ZEed57931be9869f81bcc818890b5f33e7",
+        "offset": {
+          "x": -80,
+          "y": 1500
+        },
+        "function_sid": "ZHcdc2e6438fe6d25741e4a29485092a33",
+        "parameters": [
+          {
+            "value": "{{flow.data.appId}}",
+            "key": "appId"
+          },
+          {
+            "value": "{{flow.data.recordId}}",
+            "key": "recordId"
+          },
+          {
+            "value": "{{widgets.Gather.Digits}}",
+            "key": "status"
+          },
+          {
+            "value": "{{flow.variables.reason}}",
+            "key": "reason"
+          },
+          {
+            "value": "{{flow.data.userId}}",
+            "key": "userId"
+          },
+          {
+            "value": "{{flow.data.activity}}",
+            "key": "activity"
+          }
+        ],
+        "url": "https://seminar0325-jyz-3647-dev.twil.io/update"
+      }
+    },
+    {
+      "name": "Reason",
+      "type": "gather-input-on-call",
+      "transitions": [
+        {
+          "event": "keypress"
+        },
+        {
+          "next": "SetReason",
+          "event": "speech"
+        },
+        {
+          "event": "timeout"
+        }
+      ],
+      "properties": {
+        "voice": "Polly.Takumi",
+        "speech_timeout": "auto",
+        "offset": {
+          "x": 300,
+          "y": 1020
+        },
+        "loop": 1,
+        "finish_on_key": "#",
+        "say": "かしこまりました。それではお手数ですが、否認の理由をお話ください。",
+        "language": "ja-JP",
+        "stop_gather": true,
+        "gather_language": "ja-JP",
+        "profanity_filter": "true",
+        "timeout": 5
+      }
+    },
+    {
+      "name": "SetReason",
+      "type": "set-variables",
+      "transitions": [
+        {
+          "next": "Function",
+          "event": "next"
+        }
+      ],
+      "properties": {
+        "variables": [
+          {
+            "value": "{{widgets.Reason.SpeechResult}}",
+            "key": "reason"
+          }
+        ],
+        "offset": {
+          "x": 310,
+          "y": 1280
+        }
+      }
+    },
+    {
+      "name": "SetReasonToNull",
+      "type": "set-variables",
+      "transitions": [
+        {
+          "next": "Function",
+          "event": "next"
+        }
+      ],
+      "properties": {
+        "variables": [
+          {
+            "value": "\"",
+            "key": "reason"
+          }
+        ],
+        "offset": {
+          "x": -60,
+          "y": 1030
+        }
+      }
+    },
+    {
+      "name": "Thanks",
+      "type": "say-play",
+      "transitions": [
+        {
+          "event": "audioComplete"
+        }
+      ],
+      "properties": {
+        "voice": "Polly.Takumi",
+        "offset": {
+          "x": 0,
+          "y": 1760
+        },
+        "loop": 1,
+        "say": "お忙しいところ、お手数をおかけしました。ありがとうございました。",
+        "language": "ja-JP"
+      }
+    }
+  ],
+  "initial_state": "Trigger",
+  "flags": {
+    "allow_concurrent_calls": true
+  }
+}

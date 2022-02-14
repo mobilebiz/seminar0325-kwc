@@ -1,0 +1,9 @@
+{
+	"commands": {},
+	"environments": {
+		"dev": { "env": ".env"},
+		"*": { "env": ".env.production"}
+	},
+	"projects": {},
+	"runtime": "node12"
+}

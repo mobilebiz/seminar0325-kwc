@@ -1,0 +1,27 @@
+{
+  "name": "seminar0325-kwc",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "test": "jest",
+    "start": "twilio-run",
+    "deploy": "twilio serverless:deploy -p Joyzo",
+    "deploy:prod": "twilio serverless:deploy -p Joyzo --production",
+    "deploy:flow": "./flowUpdate.sh"
+  },
+  "dependencies": {
+    "@twilio/runtime-handler": "1.2.2",
+    "node-fetch": "^2.6.1",
+    "axios": "^0.26.0",
+    "twilio": "^3.56"
+  },
+  "devDependencies": {
+    "twilio-run": "^3.4.1"
+  },
+  "engines": {
+    "node": "12"
+  },
+  "jest": {
+    "testEnvironment": "node"
+  }
+}
