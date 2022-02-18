@@ -7,8 +7,9 @@ exports.handler = async function (context, event, callback) {
 
   try {
     // パラメータの取得
-    const body = JSON.parse(event.body);
-    // const body = event.body;
+    console.dir(event);
+    // const body = JSON.parse(event.body);
+    const body = event;
     const params = {};
     params.appId = body.app.id || null;
     params.recordId = body.record.$id.value || null;
