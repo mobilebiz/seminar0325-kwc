@@ -90,8 +90,6 @@ CYBOZU_USER_PASS|同じくパスワード
 
 ## デプロイ
 
-```
+```sh
 % twilio serverless:deploy --production
 ```
-
-
