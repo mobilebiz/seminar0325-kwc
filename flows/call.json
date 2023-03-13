@@ -159,13 +159,13 @@
         }
       ],
       "properties": {
-        "service_sid": "ZS0442755b33645e0f7a52ff4eb302288f",
-        "environment_sid": "ZEed57931be9869f81bcc818890b5f33e7",
+        "service_sid": "ZSef7766f85447ae6462f0d8d6f87642ce",
+        "environment_sid": "ZE3c14946c389ba5f4bdfff4d5f04b78b7",
         "offset": {
           "x": -80,
           "y": 1500
         },
-        "function_sid": "ZHcdc2e6438fe6d25741e4a29485092a33",
+        "function_sid": "ZH887857e715ff032caaaa6f1a2021efd3",
         "parameters": [
           {
             "value": "{{flow.data.appId}}",
@@ -192,7 +192,7 @@
             "key": "activity"
           }
         ],
-        "url": "https://seminar0325-jyz-3647-dev.twil.io/update"
+        "url": "https://seminar0325-kwc-2734-dev.twil.io/function/update"
       }
     },
     {

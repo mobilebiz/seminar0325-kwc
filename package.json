@@ -6,20 +6,22 @@
     "test": "jest",
     "start": "twilio-run",
     "deploy": "twilio serverless:deploy -p Joyzo",
-    "deploy:prod": "twilio serverless:deploy -p Joyzo --production",
-    "deploy:flow": "./flowUpdate.sh"
+    "deploy:prod": "twilio serverless:deploy -p Sales --production --runtime node16 --force",
+    "deploy:flow": "./flowUpdate.sh",
+    "logs:prod": "twilio serverless:logs --service-sid ZSa12dcb80c70f8643d2a266aaceb0d3e2 --tail -p Sales --production"
   },
   "dependencies": {
+    "@kintone/rest-api-client": "^2.0.37",
     "@twilio/runtime-handler": "1.2.2",
-    "node-fetch": "^2.6.1",
     "axios": "^0.26.0",
+    "node-fetch": "^2.6.1",
     "twilio": "^3.56"
   },
   "devDependencies": {
     "twilio-run": "^3.4.1"
   },
   "engines": {
-    "node": "12"
+    "node": "16"
   },
   "jest": {
     "testEnvironment": "node"
