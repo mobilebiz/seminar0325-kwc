@@ -19,7 +19,7 @@ exports.handler = async function (context, event, callback) {
     codes.forEach((code, idx) => {
       query += `codes[${idx}]=${code}&`;
     });
-    query += 'offset=0&size=10';
+    query += 'offset=0&size=100';
 
     // ユーザーエクスポートAPIを使ってリストを取得
     fetch(
